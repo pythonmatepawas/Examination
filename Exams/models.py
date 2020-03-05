@@ -13,7 +13,7 @@ class Student(models.Model):
     
 
 class Exam(models.Model):
-    Institute_name = models.CharField(max_length=20)
+    Institute_name = models.CharField(max_length=200)
     stream = models.CharField(max_length=20)
     Class  = models.CharField(max_length=20)
     branch = models.CharField(max_length=20)
@@ -34,7 +34,7 @@ class ExamQuestion(models.Model):
 
 class StudentAnswer(models.Model):
     email = models.EmailField()
-    email_question_id = models.ForeignKey(ExamQuestion,on_delete=models.CASCADE)
+    exam_question_id = models.ForeignKey(ExamQuestion,on_delete=models.CASCADE)
     Answer_given = models.CharField(max_length=20)
     Correct_Answer = models.IntegerField()
     Score = models.IntegerField()
@@ -42,6 +42,11 @@ class StudentAnswer(models.Model):
     updated_date = models.DateField()
 
 
+    def save(self, *args, **kwargs):
+        print(self)
+        if self.Answer_given == self.exam_question_id.Answer:
+            self.Score = self.Score + 1
+        super(StudentAnswer, self).save(*args, **kwargs)
 
 
 
